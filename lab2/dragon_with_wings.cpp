@@ -48,8 +48,9 @@ public:
     // Движемся время tau из текущего положения с текущей скоростью
 void move(double tau, int Steps)
 {
-    
-        y = y+6*tau;
+    double time = tau*Steps;
+    smth = (pow(sin(x*tau*Steps/5),2)+pow(sin(y*tau*Steps/5),2));
+
     
     
 }
@@ -167,7 +168,7 @@ public:
             double pointY = nodesCoords[i*3 + 1];
             double pointZ = nodesCoords[i*3 + 2];
             // Модельная скалярная величина распределена как-то вот так
-            double smth = 0;
+            double smth;
             
             CalcNode node(pointX, pointY, pointZ, smth);
             nodes[i] = node;
@@ -217,9 +218,9 @@ public:
 
     // Метод отвечает за выполнение для всей сетки шага по времени величиной tau
     void doTimeStep(double tau, int step) {
-        // for(int i =0; i < nodes.size(); ++i) {
-        //     nodes[i].move(tau,step);
-        //  }
+        for(int i =0; i < nodes.size(); ++i) {
+            nodes[i].move(tau,step);
+         }
         // Двигаем только точки крыльев по индексам
         for(size_t idx : first_wing_indices) {
             nodes[idx].move_right(tau, step);
@@ -227,6 +228,7 @@ public:
          for(size_t idx : second_wing_indices) {
             nodes[idx].move_left(tau,step);
          }
+         
          
     }
 
